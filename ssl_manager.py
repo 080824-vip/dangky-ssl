@@ -1,8 +1,24 @@
 
 import os
+import requests
 
-def register_ssl(domain):
-    os.system(f"sudo certbot certonly --manual --preferred-challenges dns -d {domain}")
+def register_ssl(domain, api_token, zone_id):
+    def add_txt_record(domain, txt_value):
+        url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+        headers = {
+            "Authorization": f"Bearer {api_token}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "type": "TXT",
+            "name": f"_acme-challenge.{domain}",
+            "content": txt_value,
+            "ttl": 120
+        }
+        response = requests.post(url, json=data, headers=headers)
+        return response.status_code == 200
+
+    os.system(f"sudo certbot certonly --manual --preferred-challenges dns -d {domain} --manual-auth-hook 'echo {api_token} {zone_id}'")
 
 def renew_ssl(domain):
     os.system(f"sudo certbot renew --cert-name {domain}")
@@ -11,6 +27,9 @@ def list_ssl():
     os.system("sudo certbot certificates")
 
 def main():
+    api_token = input("Nhập API Token của Cloudflare: ")
+    zone_id = input("Nhập Zone ID của Cloudflare: ")
+    
     while True:
         print("1. Đăng ký SSL cho domain")
         print("2. Gia hạn SSL cho domain")
@@ -20,7 +39,7 @@ def main():
 
         if choice == '1':
             domain = input("Nhập domain: ")
-            register_ssl(domain)
+            register_ssl(domain, api_token, zone_id)
         elif choice == '2':
             domain = input("Nhập domain (hoặc để trống để gia hạn tất cả): ")
             if domain:
