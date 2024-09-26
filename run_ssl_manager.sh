@@ -1,6 +1,14 @@
 
 #!/bin/bash
 
+# Kiểm tra và cài đặt certbot nếu chưa có
+if ! command -v certbot &> /dev/null
+then
+    echo "certbot chưa được cài đặt. Đang cài đặt certbot..."
+    sudo apt-get update
+    sudo apt-get install -y certbot
+fi
+
 # Hiển thị menu
 echo "1. Đăng ký SSL cho domain"
 echo "2. Gia hạn SSL cho domain"
