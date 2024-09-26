@@ -9,6 +9,9 @@ then
     sudo apt-get install -y certbot
 fi
 
+# Mở port 8080
+sudo ufw allow 8080
+
 # Hiển thị menu
 echo "1. Đăng ký SSL cho domain"
 echo "2. Gia hạn SSL cho domain"
