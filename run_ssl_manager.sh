@@ -9,14 +9,12 @@ then
     sudo apt-get install -y certbot
 fi
 
-# Mở port 8080
-sudo ufw allow 8080
-
 # Hiển thị menu
 echo "1. Đăng ký SSL cho domain"
 echo "2. Gia hạn SSL cho domain"
 echo "3. Danh sách domain đã đăng ký SSL thành công"
 echo "4. Thoát"
+echo "8. Mở port 8080"
 read -p "Chọn một tùy chọn: " choice
 
 # Thiết lập biến môi trường ACTION dựa trên lựa chọn của người dùng
@@ -31,6 +29,11 @@ case $choice in
         export ACTION="list"
         ;;
     4)
+        exit 0
+        ;;
+    8)
+        sudo ufw allow 8080
+        echo "Port 8080 đã được mở."
         exit 0
         ;;
     *)
