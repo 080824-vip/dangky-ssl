@@ -2,7 +2,7 @@
 import os
 
 def register_ssl(domain):
-    os.system(f"sudo certbot certonly --standalone -d {domain} --http-01-port 8080")
+    os.system(f"sudo certbot certonly --manual --preferred-challenges dns -d {domain}")
 
 def renew_ssl(domain):
     os.system(f"sudo certbot renew --cert-name {domain}")
