@@ -18,8 +18,15 @@ def register_ssl(domain, api_token, zone_id):
         response = requests.post(url, json=data, headers=headers)
         return response.status_code == 200
 
-    txt_value = "temporary_value"  # Giá trị tạm thời cho bản ghi TXT
+    import time
+    import random
+    import string
+
+    # Tạo giá trị ngẫu nhiên cho bản ghi TXT
+    txt_value = ''.join(random.choices(string.ascii_letters + string.digits, k=32))
     if add_txt_record(domain, txt_value):
+        print("Đã thêm bản ghi TXT. Chờ 60 giây để DNS cập nhật...")
+        time.sleep(60)  # Chờ 60 giây để DNS cập nhật
         os.system(f"sudo certbot certonly --manual --preferred-challenges dns -d {domain} --manual-auth-hook 'echo {api_token} {zone_id}'")
     else:
         print("Failed to add TXT record to Cloudflare.")
