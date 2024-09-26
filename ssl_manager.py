@@ -18,7 +18,11 @@ def register_ssl(domain, api_token, zone_id):
         response = requests.post(url, json=data, headers=headers)
         return response.status_code == 200
 
-    os.system(f"sudo certbot certonly --manual --preferred-challenges dns -d {domain} --manual-auth-hook 'echo {api_token} {zone_id}'")
+    txt_value = "temporary_value"  # Giá trị tạm thời cho bản ghi TXT
+    if add_txt_record(domain, txt_value):
+        os.system(f"sudo certbot certonly --manual --preferred-challenges dns -d {domain} --manual-auth-hook 'echo {api_token} {zone_id}'")
+    else:
+        print("Failed to add TXT record to Cloudflare.")
 
 def renew_ssl(domain):
     os.system(f"sudo certbot renew --cert-name {domain}")
