@@ -27,7 +27,7 @@ def register_ssl(domain, api_token, zone_id):
     if add_txt_record(domain, txt_value):
         print("Đã thêm bản ghi TXT. Chờ 60 giây để DNS cập nhật...")
         time.sleep(60)  # Chờ 60 giây để DNS cập nhật
-        os.system(f"sudo certbot certonly --manual --preferred-challenges dns -d {domain} --manual-auth-hook 'python3 add_txt_record.py {domain} {txt_value} {api_token} {zone_id}'")
+        os.system(f"sudo certbot certonly --manual --preferred-challenges dns -d {domain} --manual-auth-hook 'python3 /home/user/dangky-ssl/add_txt_record.py {domain} {txt_value} {api_token} {zone_id}'")
     else:
         print("Failed to add TXT record to Cloudflare.")
 
