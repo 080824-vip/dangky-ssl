@@ -1,0 +1,39 @@
+
+name: SSL Manager
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Chọn hành động'
+        required: true
+        default: 'register'
+        type: choice
+        options:
+          - register
+          - renew
+          - list
+
+jobs:
+  ssl:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y certbot
+
+    - name: Run SSL Manager
+      run: |
+        python ssl_manager.py
+      env:
+        ACTION: \${{ github.event.inputs.action }}
